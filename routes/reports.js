@@ -1,0 +1,18 @@
+import express from 'express';
+import {
+	getDashboard,
+	reportEmergency,
+	getReports,
+	getReport,
+	updateReport,
+} from '../controllers/reports.js';
+import auth from '../middlewares/auth.js';
+const router = express.Router();
+
+router.get('/dashboard', auth, getDashboard);
+router.post('/', auth, reportEmergency);
+router.get('/', auth, getReports);
+router.get('/:id', auth, getReport);
+router.patch('/', auth, updateReport);
+
+export default router;
