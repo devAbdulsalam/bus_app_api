@@ -7,6 +7,9 @@ dotenv.config();
 
 const pool = new Pool({
 	connectionString: process.env.DATABASE_URL,
+	ssl: {
+    rejectUnauthorized: false, // Use this option only if you do not have a valid certificate
+  },
 });
 pool.connect((err) => {
 	if (err) {

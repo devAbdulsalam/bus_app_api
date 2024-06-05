@@ -4,12 +4,13 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL UNIQUE,
   password TEXT NOT NULL,  
   phone VARCHAR(255) NOT NULL,
-  role Enum('STUDENT', 'STAFF', 'ADMIN') NOT NULL,
+  role VARCHAR(255) NOT NULL,
   registration_number VARCHAR(50),
-  staff_id VARCHAR(50)
+  staff_id VARCHAR(50),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+  -- role Enum('STUDENT', 'STAFF', 'ADMIN') NOT NULL,
 
 CREATE TABLE avatar (
   id SERIAL PRIMARY KEY,
