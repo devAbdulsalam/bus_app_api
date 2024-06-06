@@ -36,7 +36,7 @@ export const getAvailableBuses = async (req, res) => {
 
 	try {
 		const result = await pool.query(
-			`SELECT b.id, b.source, b.destination, b.departure_time, b.arrival_time, b.available_seats
+			`SELECT b.id, b.name, b.source, b.destination, b.departure_time, b.arrival_time, b.available_seats
        FROM bus b
        JOIN bus_schedule bs ON b.id = bs.bus_id
        JOIN pickup_points pp ON bs.pickup_point_id = pp.id
@@ -53,18 +53,19 @@ export const createBus = async (req, res) => {
 	const {
 		source,
 		destination,
+		name,
 		travel_date,
 		departure_time,
 		arrival_time,
 		price,
 		number_of_seats,
-		available_seats,
+		available_seats = number_of_seats,
 	} = req.body;
 
 	try {
 		const result = await pool.query(
 			`INSERT INTO bus (source, destination, travel_date, departure_time, arrival_time, price, number_of_seats, available_seats)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
 			[
 				source,
 				destination,
@@ -74,6 +75,7 @@ export const createBus = async (req, res) => {
 				price,
 				number_of_seats,
 				available_seats,
+				name,
 			]
 		);
 		res.status(201).json(result.rows[0]);
@@ -100,6 +102,7 @@ export const updateBus = async (req, res) => {
 	const {
 		bus_id,
 		source,
+		name,
 		destination,
 		departure_time,
 		arrival_time,
@@ -109,7 +112,7 @@ export const updateBus = async (req, res) => {
 	} = req.body;
 	try {
 		const result = await pool.query(
-			`UPDATE bus SET source = $1, destination = $2, travel_date= $3, departure_time = $4, arrival_time = $5, price = $6, number_of_seats = $7, available_seats = $8 WHERE id = $9 RETURNING *`,
+			`UPDATE bus SET source = $1, destination = $2, travel_date= $3, departure_time = $4, arrival_time = $5, price = $6, number_of_seats = $7, available_seats = $8, name= $9 WHERE id = $10 RETURNING *`,
 			[
 				source,
 				destination,
@@ -119,6 +122,7 @@ export const updateBus = async (req, res) => {
 				price,
 				number_of_seats,
 				available_seats,
+				name,
 				bus_id,
 			]
 		);
