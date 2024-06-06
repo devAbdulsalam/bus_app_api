@@ -64,9 +64,10 @@ export const createBus = async (req, res) => {
 
 	try {
 		const result = await pool.query(
-			`INSERT INTO bus (source, destination, travel_date, departure_time, arrival_time, price, number_of_seats, available_seats)
+			`INSERT INTO bus (name, source, destination, travel_date, departure_time, arrival_time, price, number_of_seats, available_seats)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
 			[
+				name,
 				source,
 				destination,
 				travel_date,
@@ -75,7 +76,6 @@ export const createBus = async (req, res) => {
 				price,
 				number_of_seats,
 				available_seats,
-				name,
 			]
 		);
 		res.status(201).json(result.rows[0]);
