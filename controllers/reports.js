@@ -53,8 +53,15 @@ export const getDashboard = async (req, res) => {
 export const getReports = async (req, res) => {
 	try {
 		await pool.query('BEGIN');
-
-		const reportResult = await pool.query('SELECT * FROM report');
+		let reportResult;
+		if (req.user.role === 'Admin') {
+			reportResult = await pool.query('SELECT * FROM report');
+		} else {
+			reportResult = await pool.query(
+				'SELECT * FROM report WHERE user_id = $1',
+				[id]
+			);
+		}
 
 		await pool.query('COMMIT');
 		res.status(201).json(reportResult.rows);

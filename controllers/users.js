@@ -42,7 +42,7 @@ export const login = async (req, res) => {
 			return res.status(400).json({ message: 'Username or password is wrong' });
 
 		const validPass = await bcrypt.compare(password, user.rows[0].password);
-		if (!validPass){
+		if (!validPass) {
 			return res.status(400).json({ message: 'Invalid password' });
 		}
 
@@ -82,8 +82,8 @@ export const getProfile = async (req, res) => {
 		if (user.rows.length === 0) {
 			return res.status(400).json({ message: 'Username or password is wrong' });
 		}
-
-		res.status(200).json(user.rows[0]);
+		const avatar = await pool.query('SELECT * FROM avatar WHERE id = $1', [id]);
+		res.status(200).json({ ...user.rows[0], avatar: avatar.rows[0]?.url });
 	} catch (err) {
 		console.log(err);
 		res.status(500).json(err.message);
@@ -119,9 +119,13 @@ export const loginWithUsernameOrEmail = async (req, res) => {
 			'SELECT id, username, email, phone, role FROM users WHERE email = $1',
 			[email]
 		);
-		res
-			.header('Authorization', token)
-			.send({ token, refreshToken, user: userInfo });
+		const avatar = await pool.query('SELECT * FROM avatar WHERE id = $1', [id]);
+
+		res.header('Authorization', token).json({
+			token,
+			refreshToken,
+			user: { ...user.rows[0], avatar: avatar.rows[0]?.url },
+		});
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -231,7 +235,7 @@ export const getUsers = async (req, res) => {
 				avatar: matchingImage ? matchingImage.url : null, // Add image URL if found, otherwise null
 			};
 		});
-		res.json(usersWithImages);
+		res.status(200).json(usersWithImages);
 	} catch (err) {
 		res.status(500).send(err.message);
 	}
@@ -259,7 +263,7 @@ export const getAdmins = async (req, res) => {
 		// 	};
 		// });
 		// res.json(usersWithImages);
-		res.json(users.rows);
+		res.status(200).json(users.rows);
 	} catch (err) {
 		res.status(500).send(err.message);
 	}
@@ -294,7 +298,7 @@ export const getUser = async (req, res) => {
 		);
 		const avatar = await pool.query('SELECT * FROM avatar WHERE id = $1', [id]);
 
-		res.json({ ...user.rows[0], avatar: avatar.rows[0]?.url });
+		res.status(200).json({ ...user.rows[0], avatar: avatar.rows[0]?.url });
 	} catch (err) {
 		res.status(500).send(err.message);
 	}
@@ -369,7 +373,7 @@ export const updateUser = async (req, res) => {
 			[id]
 		);
 
-		res.json({ ...user.rows[0], avatar: avatar.rows[0]?.url });
+		res.status(200).json({ ...user.rows[0], avatar: avatar.rows[0]?.url });
 	} catch (err) {
 		console.log(err);
 		res.status(500).send(err.message);

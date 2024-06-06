@@ -27,10 +27,12 @@ CREATE TABLE bus (
   destination VARCHAR(100) NOT NULL DEFAULT 'wudil',
   departure_time TIME NOT NULL DEFAULT '07:00:00',
   arrival_time TIME NOT NULL DEFAULT '07:30:00',
+  travel_date DATE NOT NULL,
   price DECIMAL(10, 2) NOT NULL DEFAULT 600.00,
   number_of_seats INTEGER NOT NULL DEFAULT 18,
   available_seats INTEGER NOT NULL DEFAULT 0
 );
+ALTER TABLE bus ADD COLUMN travel_date DATE NOT NULL CURRENT_TIMESTAMP;
 
 CREATE TABLE bus_seat (
   id SERIAL PRIMARY KEY,
