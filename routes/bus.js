@@ -11,8 +11,8 @@ import {
 import auth from '../middlewares/auth.js';
 const router = express.Router();
 
-router.get('/search', auth, getAvailableBuses);
 router.get('/', auth, getAllBuses);
+router.get('/search', auth, getAvailableBuses);
 router.get('/:id', auth, getBus);
 router.post('/', auth, createBus);
 router.patch('/:id', auth, updateBusWithNotification);

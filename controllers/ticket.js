@@ -43,6 +43,18 @@ export const bookTicket = async (req, res) => {
 	try {
 		await pool.query('BEGIN');
 
+		const busResult = await pool.query('SELECT * FROM bus WHERE id = $1', [
+			bus_id,
+		]);
+		const bus = busResult.rows[0];
+		if (!bus) {
+			return res.status(400).json({ message: 'Bus not found!' });
+		}
+		if (bus.avalable_seats === bus.number_of_seats) {
+			return res
+				.status(400)
+				.json({ message: 'Bus is filled up, book another bus' });
+		}
 		const ticketResult = await pool.query(
 			`INSERT INTO tickets (user_id, bus_id, seat_number, booking_date, status, created_at)
        VALUES ($1, $2, $3, NOW(), 'BOOKED', NOW()) RETURNING *`,

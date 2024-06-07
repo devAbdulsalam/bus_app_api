@@ -14,9 +14,12 @@ export const getAllBuses = async (req, res) => {
 	}
 };
 export const getBus = async (req, res) => {
-	const { bus_id } = req.body;
-	const id = bus_id || req.query.id;
+	const { id } = req.params;
+
 	try {
+		if (!id) {
+			return res.status(400).json({ message: 'invalid bus id' });
+		}
 		await pool.query('BEGIN');
 
 		const ticketResult = await pool.query('SELECT * FROM bus WHERE id = $1', [
@@ -24,7 +27,7 @@ export const getBus = async (req, res) => {
 		]);
 
 		await pool.query('COMMIT');
-		res.status(201).json(ticketResult.rows[0]);
+		res.status(200).json(ticketResult.rows[0]);
 	} catch (error) {
 		await pool.query('ROLLBACK');
 		res.status(500).json({ error: error.message });
@@ -100,7 +103,7 @@ export const updateBusWithNotification = async (req, res) => {
 };
 export const updateBus = async (req, res) => {
 	const {
-		bus_id,
+		id,
 		source,
 		name,
 		destination,
@@ -123,7 +126,7 @@ export const updateBus = async (req, res) => {
 				number_of_seats,
 				available_seats,
 				name,
-				bus_id,
+				id,
 			]
 		);
 		res.status(201).json(result.rows[0]);
