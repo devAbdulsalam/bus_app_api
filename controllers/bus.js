@@ -34,6 +34,35 @@ export const getBus = async (req, res) => {
 	}
 };
 
+export const searchBuses = async (req, res) => {
+	const { from, to, date } = req.query;
+
+	if (!from || !to || !date) {
+		return res
+			.status(400)
+			.json({ error: 'Please provide source, destination, and travel date.' });
+	}
+
+	try {
+		const result = await pool.query(
+			`SELECT id, source, destination, departure_time, arrival_time, price, number_of_seats, available_seats, travel_date
+       FROM bus
+       WHERE source = $1 AND destination = $2 AND travel_date = $3`,
+			[from, to, date]
+		);
+
+		if (result.rows.length === 0) {
+			return res
+				.status(404)
+				.json({ message: 'No buses found for the given criteria.' });
+		}
+
+		res.json(result.rows);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
 export const getAvailableBuses = async (req, res) => {
 	const { location } = req.query;
 

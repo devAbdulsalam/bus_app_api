@@ -2,7 +2,7 @@ import express from 'express';
 import {
 	getAllBuses,
 	getBus,
-	getAvailableBuses,
+	searchBuses,
 	createBus,
 	updateBus,
 	updateBusWithNotification,
@@ -12,7 +12,7 @@ import auth from '../middlewares/auth.js';
 const router = express.Router();
 
 router.get('/', auth, getAllBuses);
-router.get('/search', auth, getAvailableBuses);
+router.get('/search', searchBuses);
 router.get('/:id', auth, getBus);
 router.post('/', auth, createBus);
 router.patch('/:id', auth, updateBusWithNotification);
