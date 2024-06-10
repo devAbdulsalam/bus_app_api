@@ -22,7 +22,7 @@ export const create = async (req, res) => {
 					paymentDescription: 'Payment for goods',
 					currencyCode: 'NGN',
 					contractCode: 8794558373,
-					redirectUrl: '/',
+					redirectUrl: 'https://my-merchants-page.com/transaction/confirm',
 				}),
 			}
 		);
