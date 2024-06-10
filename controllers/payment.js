@@ -90,7 +90,7 @@ export const getPayments = async (req, res) => {
 		const accessToken = await getToken();
 
 		const response = await fetch(
-			`https://https://sandbox.monnify.com/api/v1/transactions/search`,
+			`https://sandbox.monnify.com/api/v1/transactions/search`,
 			{
 				method: 'GET',
 				headers: {
