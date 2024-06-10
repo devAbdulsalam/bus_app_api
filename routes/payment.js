@@ -10,5 +10,5 @@ const router = express.Router();
 router.get('/', auth, getPayments);
 router.get('/:id', auth, getPayment);
 router.post('/', auth, createPayment);
-router.post('/', auth, confrimTransaction);
+router.post('/confirm-payment', auth, confrimTransaction);
 export default router;
