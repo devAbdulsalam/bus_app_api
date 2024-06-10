@@ -10,6 +10,7 @@ import userRoutes from './routes/users.js';
 import reportRoutes from './routes/reports.js';
 import busRoutes from './routes/bus.js';
 import ticketRoutes from './routes/ticket.js';
+import paymentRoutes from './routes/payment.js';
 // import orderRoutes from './routes/orders.js';
 // import categoryRoutes from './routes/category.js';
 // import setupRoutes from './routes/setup.js';
@@ -28,6 +29,7 @@ app.use('/buses', busRoutes);
 app.use('/tickets', ticketRoutes);
 // app.use('/booking', bookingRoutes);
 app.use('/reports', reportRoutes);
+app.use('/payments', paymentRoutes);
 
 // app.use('/setup', setupRoutes);
 
