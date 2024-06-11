@@ -52,6 +52,8 @@ export const getDashboard = async (req, res) => {
 };
 export const getReports = async (req, res) => {
 	try {
+		console.log('req.user', req.user.id);
+		const { id } = req.user;
 		await pool.query('BEGIN');
 		let reportResult;
 		if (req.user.role === 'Admin') {
@@ -59,7 +61,7 @@ export const getReports = async (req, res) => {
 		} else {
 			reportResult = await pool.query(
 				'SELECT * FROM report WHERE user_id = $1',
-				[req.user.id]
+				[id]
 			);
 		}
 
