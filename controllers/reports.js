@@ -52,21 +52,22 @@ export const getDashboard = async (req, res) => {
 };
 export const getReports = async (req, res) => {
 	try {
-		console.log('req.user', req.user.id);
 		const { id } = req.user;
+
+		console.log('req.user', id);
 		await pool.query('BEGIN');
-		let reportResult;
-		if (req.user.role === 'Admin') {
-			reportResult = await pool.query('SELECT * FROM report');
-		} else {
-			reportResult = await pool.query(
-				'SELECT * FROM report WHERE user_id = $1',
-				[id]
-			);
-		}
+		// let reportResult;
+		// if (req.user.role === 'Admin') {
+		// 	reportResult = await pool.query('SELECT * FROM report');
+		// } else {
+		let reportResult = await pool.query(
+			'SELECT * FROM report WHERE user_id = $1',
+			[id]
+		);
+		// }
 
 		await pool.query('COMMIT');
-		res.status(201).json(reportResult.rows);
+		res.status(200).json(reportResult.rows);
 	} catch (error) {
 		await pool.query('ROLLBACK');
 		res.status(500).json({ error: error.message });
