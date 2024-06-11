@@ -94,6 +94,9 @@ export const reportEmergency = async (req, res) => {
 	const { address, user_id, description } = req.body;
 
 	try {
+		if (!address || !user_id || !description) {
+			return res.status(400).json({ message: 'All fields are required' });
+		}
 		const result = await pool.query(
 			`INSERT INTO report (address, user_id, description)
        VALUES ($1, $2, $3) RETURNING *`,
