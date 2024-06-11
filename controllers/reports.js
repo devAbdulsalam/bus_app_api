@@ -53,18 +53,16 @@ export const getDashboard = async (req, res) => {
 export const getReports = async (req, res) => {
 	try {
 		const { id } = req.user;
-
-		console.log('req.user', id);
 		await pool.query('BEGIN');
-		// let reportResult;
-		// if (req.user.role === 'Admin') {
-		// 	reportResult = await pool.query('SELECT * FROM report');
-		// } else {
-		let reportResult = await pool.query(
-			'SELECT * FROM report WHERE user_id = $1',
-			[id]
-		);
-		// }
+		let reportResult;
+		if (req.user.role === 'Admin') {
+			reportResult = await pool.query('SELECT * FROM report');
+		} else {
+			reportResult = await pool.query(
+				'SELECT * FROM report WHERE user_id = $1',
+				[id]
+			);
+		}
 
 		await pool.query('COMMIT');
 		res.status(200).json(reportResult.rows);
@@ -75,16 +73,17 @@ export const getReports = async (req, res) => {
 };
 export const getReport = async (req, res) => {
 	try {
-		const { report_id } = req.body;
+		const { id } = req.params;
 		await pool.query('BEGIN');
 
 		const reportResult = await pool.query(
 			'SELECT * FROM report WHERE id = $1',
-			[report_id]
+			[id]
 		);
+		console.log('reportResult.rows', reportResult.rows);
 
 		await pool.query('COMMIT');
-		res.status(201).json(reportResult.rows);
+		res.status(201).json(reportResult.rows[0]);
 	} catch (error) {
 		await pool.query('ROLLBACK');
 		res.status(500).json({ error: error.message });
@@ -94,13 +93,18 @@ export const reportEmergency = async (req, res) => {
 	const { address, user_id, description } = req.body;
 
 	try {
-		if (!address || !user_id || !description) {
+		const id = user_id || req.user.id;
+		if (!id) {
+			return res.status(400).json({ message: 'User id is required' });
+		}
+		if (!address || !description) {
 			return res.status(400).json({ message: 'All fields are required' });
 		}
+
 		const result = await pool.query(
 			`INSERT INTO report (address, user_id, description)
        VALUES ($1, $2, $3) RETURNING *`,
-			[address, user_id, description]
+			[address, id, description]
 		);
 		res.status(201).json(result.rows[0]);
 	} catch (error) {
