@@ -46,6 +46,8 @@ CREATE TABLE bus_seat (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- add payment id, transaction id
 CREATE TABLE tickets (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -53,8 +55,15 @@ CREATE TABLE tickets (
   seat_number INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   booking_date TIMESTAMP NOT NULL,
+
   status VARCHAR(100) NOT NULL
 );
+
+
+-- ALTER TABLE tickets ADD COLUMN transactionReference VARCHAR(200);
+-- ALTER TABLE tickets ADD COLUMN paymentReference VARCHAR(200);
+
+
   -- status ENUM('BOOKED', 'CANCELLED', 'COMPLETED') NOT NULL
 
 CREATE TABLE pickup_points (

@@ -59,7 +59,7 @@ export const getReports = async (req, res) => {
 		} else {
 			reportResult = await pool.query(
 				'SELECT * FROM report WHERE user_id = $1',
-				[id]
+				[req.user.id]
 			);
 		}
 
